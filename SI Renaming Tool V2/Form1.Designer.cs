@@ -40,20 +40,21 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.btn_email_masfile = new System.Windows.Forms.Button();
-            this.lbl_email_masfile_loc = new System.Windows.Forms.Label();
+            this.btn_start_emailing = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.btn_renamed_SI = new System.Windows.Forms.Button();
             this.lbl_renamed_si_loc = new System.Windows.Forms.Label();
-            this.btn_start_emailing = new System.Windows.Forms.Button();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.btn_email_masfile = new System.Windows.Forms.Button();
+            this.lbl_email_masfile_loc = new System.Windows.Forms.Label();
+            this.cb_test = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -184,6 +185,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.cb_test);
             this.tabPage2.Controls.Add(this.btn_start_emailing);
             this.tabPage2.Controls.Add(this.groupBox4);
             this.tabPage2.Controls.Add(this.groupBox3);
@@ -194,6 +196,51 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Emailing";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // btn_start_emailing
+            // 
+            this.btn_start_emailing.Enabled = false;
+            this.btn_start_emailing.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btn_start_emailing.Location = new System.Drawing.Point(219, 205);
+            this.btn_start_emailing.Name = "btn_start_emailing";
+            this.btn_start_emailing.Size = new System.Drawing.Size(75, 23);
+            this.btn_start_emailing.TabIndex = 4;
+            this.btn_start_emailing.Text = "Start";
+            this.btn_start_emailing.UseVisualStyleBackColor = true;
+            this.btn_start_emailing.Click += new System.EventHandler(this.btn_start_emailing_Click);
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.btn_renamed_SI);
+            this.groupBox4.Controls.Add(this.lbl_renamed_si_loc);
+            this.groupBox4.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.groupBox4.Location = new System.Drawing.Point(8, 89);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(506, 83);
+            this.groupBox4.TabIndex = 3;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Renamed Service Invoice Location";
+            // 
+            // btn_renamed_SI
+            // 
+            this.btn_renamed_SI.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btn_renamed_SI.Location = new System.Drawing.Point(418, 54);
+            this.btn_renamed_SI.Name = "btn_renamed_SI";
+            this.btn_renamed_SI.Size = new System.Drawing.Size(75, 23);
+            this.btn_renamed_SI.TabIndex = 1;
+            this.btn_renamed_SI.Text = "Select";
+            this.btn_renamed_SI.UseVisualStyleBackColor = true;
+            this.btn_renamed_SI.Click += new System.EventHandler(this.btn_renamed_SI_Click);
+            // 
+            // lbl_renamed_si_loc
+            // 
+            this.lbl_renamed_si_loc.AutoSize = true;
+            this.lbl_renamed_si_loc.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.lbl_renamed_si_loc.Location = new System.Drawing.Point(6, 25);
+            this.lbl_renamed_si_loc.Name = "lbl_renamed_si_loc";
+            this.lbl_renamed_si_loc.Size = new System.Drawing.Size(311, 13);
+            this.lbl_renamed_si_loc.TabIndex = 0;
+            this.lbl_renamed_si_loc.Text = "Press the button to select Renamed Service Invoice location";
             // 
             // groupBox3
             // 
@@ -228,50 +275,20 @@
             this.lbl_email_masfile_loc.TabIndex = 0;
             this.lbl_email_masfile_loc.Text = "Press the button to select Email Master File location";
             // 
-            // groupBox4
+            // cb_test
             // 
-            this.groupBox4.Controls.Add(this.btn_renamed_SI);
-            this.groupBox4.Controls.Add(this.lbl_renamed_si_loc);
-            this.groupBox4.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.groupBox4.Location = new System.Drawing.Point(8, 103);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(506, 83);
-            this.groupBox4.TabIndex = 3;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Renamed Service Invoice Location";
-            // 
-            // btn_renamed_SI
-            // 
-            this.btn_renamed_SI.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.btn_renamed_SI.Location = new System.Drawing.Point(418, 54);
-            this.btn_renamed_SI.Name = "btn_renamed_SI";
-            this.btn_renamed_SI.Size = new System.Drawing.Size(75, 23);
-            this.btn_renamed_SI.TabIndex = 1;
-            this.btn_renamed_SI.Text = "Select";
-            this.btn_renamed_SI.UseVisualStyleBackColor = true;
-            this.btn_renamed_SI.Click += new System.EventHandler(this.btn_renamed_SI_Click);
-            // 
-            // lbl_renamed_si_loc
-            // 
-            this.lbl_renamed_si_loc.AutoSize = true;
-            this.lbl_renamed_si_loc.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            this.lbl_renamed_si_loc.Location = new System.Drawing.Point(6, 25);
-            this.lbl_renamed_si_loc.Name = "lbl_renamed_si_loc";
-            this.lbl_renamed_si_loc.Size = new System.Drawing.Size(311, 13);
-            this.lbl_renamed_si_loc.TabIndex = 0;
-            this.lbl_renamed_si_loc.Text = "Press the button to select Renamed Service Invoice location";
-            // 
-            // btn_start_emailing
-            // 
-            this.btn_start_emailing.Enabled = false;
-            this.btn_start_emailing.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.btn_start_emailing.Location = new System.Drawing.Point(219, 205);
-            this.btn_start_emailing.Name = "btn_start_emailing";
-            this.btn_start_emailing.Size = new System.Drawing.Size(75, 23);
-            this.btn_start_emailing.TabIndex = 4;
-            this.btn_start_emailing.Text = "Start";
-            this.btn_start_emailing.UseVisualStyleBackColor = true;
-            this.btn_start_emailing.Click += new System.EventHandler(this.btn_start_emailing_Click);
+            this.cb_test.AutoSize = true;
+            this.cb_test.Checked = true;
+            this.cb_test.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_test.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.cb_test.Location = new System.Drawing.Point(212, 180);
+            this.cb_test.Name = "cb_test";
+            this.cb_test.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.cb_test.Size = new System.Drawing.Size(90, 19);
+            this.cb_test.TabIndex = 5;
+            this.cb_test.Text = "Test to Excel";
+            this.cb_test.UseVisualStyleBackColor = true;
+            this.cb_test.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // Form1
             // 
@@ -291,10 +308,11 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
+            this.tabPage2.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -320,6 +338,7 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Button btn_email_masfile;
         private System.Windows.Forms.Label lbl_email_masfile_loc;
+        private System.Windows.Forms.CheckBox cb_test;
     }
 }
 

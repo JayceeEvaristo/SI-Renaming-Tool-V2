@@ -183,6 +183,7 @@
     <Compile Include="Controller\ReadPdfController.cs" />
     <Compile Include="Controller\SearchFromAmsDataUsingSIN.cs" />
     <Compile Include="Controller\SendEmailController.cs" />
+    <Compile Include="Controller\TestToExcelController.cs" />
     <Compile Include="Controller\UploadController.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -204,6 +205,7 @@
     <Compile Include="Model\ExcelModel.cs" />
     <Compile Include="Model\FileNameModel.cs" />
     <Compile Include="Model\GlobalVarModel.cs" />
+    <Compile Include="Model\LogEmailModel.cs" />
     <Compile Include="Model\ServiceInvoiceModel.cs" />
     <Compile Include="Model\UploadModel.cs" />
     <Compile Include="Program.cs" />

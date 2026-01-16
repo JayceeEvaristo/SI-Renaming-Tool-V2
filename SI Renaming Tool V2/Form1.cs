@@ -25,6 +25,8 @@ namespace SI_Renaming_Tool_V2_V2
         public Form1()
         {
             InitializeComponent();
+            GlobalVarModel.isTesting = true;
+            cb_test.Checked = GlobalVarModel.isTesting;
         }
 
         private async void btn_start_Click(object sender, EventArgs e)
@@ -186,13 +188,54 @@ namespace SI_Renaming_Tool_V2_V2
 
         private async void btn_start_emailing_Click(object sender, EventArgs e)
         {
+            if (!GlobalVarModel.isTesting)
+            {
+                DialogResult result = MessageBox.Show("" +
+                    "By selecting OK, you certify that all participant email addresses have been thoroughly reviewed, validated, and are correct.", "Confirmation", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+
+                if (result == DialogResult.Cancel)
+                {
+                    return;
+                }
+                else
+                {   
+                    Confirmed();
+                }
+
+            }
+            else
+            {
+                Confirmed();
+            }
+            
+
+
+        }
+
+        public string GetTsType(string fileName)
+        {
+            var match = Regex.Match(
+                fileName,
+                @"[A-Z]{2}-[A-Z]{2}"
+                );
+            return match.Success ? match.Value : null;
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            GlobalVarModel.isTesting = !GlobalVarModel.isTesting;
+
+            Debug.WriteLine("isTesting: " + GlobalVarModel.isTesting);
+        }
+
+        public async void Confirmed()
+        {
             var loadingForm = new frm_loading();
             loadingForm.Show();
 
-
-
             ZipPdfFilesService zipPdfFilesService = new ZipPdfFilesService();
             SendEmailController sendEmailController = new SendEmailController();
+            TestToExcelController TesToExcelController = new TestToExcelController();
 
             Dictionary<string, List<EmailListModel>> emailLists = null;
             ReadExcelEmailController ReadExcelEmailController = new ReadExcelEmailController();
@@ -203,6 +246,8 @@ namespace SI_Renaming_Tool_V2_V2
             var reserveEmails = emailLists["RESERVE"];
 
             List<string> fileArray = new List<string>();
+
+            List<LogEmailModel> logEmailTestList = new List<LogEmailModel>();
 
             string fileFolder = EmailingFileNameModel.EmailRenamedServiceInvoiceLocation;
 
@@ -260,8 +305,6 @@ namespace SI_Renaming_Tool_V2_V2
 
                     var zipPath = zipPdfFilesService.ZipPdfFiles(matchedFiles, shortName);
 
-
-
                     var emailList = tsType == "TS-RF" ? reserveEmails : energyEmails;
 
                     var emailEntries = emailList
@@ -275,27 +318,35 @@ namespace SI_Renaming_Tool_V2_V2
                     foreach (var emailEntry in emailEntries)
                     {
                         Debug.WriteLine($"          Sending to: {emailEntry.Email}");
-                        
-                        sendEmailController.SendEmail(zipPath, emailEntry.Email);
+
+                        if (GlobalVarModel.isTesting)
+                        {
+                            logEmailTestList.Add(new LogEmailModel
+                            {
+                                ShortName = shortName,
+                                Email = emailEntry.Email,
+                                ZipPath = zipPath
+                            });
+                        }
+                        else
+                        {
+                            sendEmailController.SendEmail(zipPath, emailEntry.Email);
+                            Task.Delay(1000).Wait();
+                        }
                     }
 
+                    File.Delete(zipPath);
+
+                    Task.Delay(2500).Wait();
+                }
+                if (GlobalVarModel.isTesting)
+                {
+                    TesToExcelController.TestExcel(logEmailTestList, fileFolder);
                 }
             });
 
             loadingForm.Close();
 
-
         }
-
-        public string GetTsType(string fileName)
-        {
-            var match = Regex.Match(
-                fileName,
-                @"[A-Z]{2}-[A-Z]{2}"
-                );
-            return match.Success ? match.Value : null;
-        }
-
-
     }
 }

@@ -38,7 +38,7 @@ namespace SI_Renaming_Tool_V2.Controller
 
             foreach (var cell in workSheet.CellsUsed())
             {
-                if (cell.Value.ToString().Contains(SINumber)) 
+                if (cell.Value.ToString().StartsWith("SI-" + SINumber))
                 {
                     int row = cell.WorksheetRow().RowNumber();
                     MFNumber = workSheet.Cell(row, column).GetString();

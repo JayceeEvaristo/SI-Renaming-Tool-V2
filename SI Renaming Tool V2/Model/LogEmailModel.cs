@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace SI_Renaming_Tool_V2.Model
 {
-    public static class GlobalVarModel
+    public class LogEmailModel
     {
-        public static string WorksheetName { get; set; }
-        public static bool isTesting { get; set; } = true;
+
+        public string Email { get; set; }
+        public string ShortName { get; set; }
+        public string ZipPath { get; set; }
     }
 }

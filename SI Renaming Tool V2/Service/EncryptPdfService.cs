@@ -29,7 +29,7 @@ namespace SI_Renaming_Tool_V2.Service
                             reader,
                             fs,
                             true, // strength128Bits
-                            "iemop" + shortName + parsedSI, // user password
+                            "iemop" + shortName, // user password
                             "Iemop43667",        // owner password
                             PdfWriter.ALLOW_PRINTING // permissions
                         );
