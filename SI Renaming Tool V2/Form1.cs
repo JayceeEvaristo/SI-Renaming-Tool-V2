@@ -184,7 +184,7 @@ namespace SI_Renaming_Tool_V2_V2
             uploadController.EmailUploadLocate(false);
         }
 
-        private async Task btn_start_emailing_Click(object sender, EventArgs e)
+        private async void btn_start_emailing_Click(object sender, EventArgs e)
         {
             var loadingForm = new frm_loading();
             loadingForm.Show();
@@ -276,7 +276,7 @@ namespace SI_Renaming_Tool_V2_V2
                     {
                         Debug.WriteLine($"          Sending to: {emailEntry.Email}");
                         
-                        sendEmailController.SendEmail(zipPath, emailEntry);
+                        sendEmailController.SendEmail(zipPath, emailEntry.Email);
                     }
 
                 }
