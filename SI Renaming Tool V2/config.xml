@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Group Name="AMSDb">
+	<String Name="Datasource">192.168.41.33</String>
+	<String Name="Port">1603</String>
+	<String Name="ServiceName">AMSX10</String>
+	<String Name="UserId">ismsadm2</String>
+	<String Name="Password">ismsadm2</String>
+</Group>
