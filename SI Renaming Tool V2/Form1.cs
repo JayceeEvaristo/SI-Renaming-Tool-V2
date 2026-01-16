@@ -184,9 +184,16 @@ namespace SI_Renaming_Tool_V2_V2
             uploadController.EmailUploadLocate(false);
         }
 
-        private void btn_start_emailing_Click(object sender, EventArgs e)
+        private async Task btn_start_emailing_Click(object sender, EventArgs e)
         {
+            var loadingForm = new frm_loading();
+            loadingForm.Show();
+
+
+
             ZipPdfFilesService zipPdfFilesService = new ZipPdfFilesService();
+            SendEmailController sendEmailController = new SendEmailController();
+
             Dictionary<string, List<EmailListModel>> emailLists = null;
             ReadExcelEmailController ReadExcelEmailController = new ReadExcelEmailController();
             ReadExcelEmailController.OpenExcel();
@@ -199,78 +206,85 @@ namespace SI_Renaming_Tool_V2_V2
 
             string fileFolder = EmailingFileNameModel.EmailRenamedServiceInvoiceLocation;
 
-            foreach (var SInvoice in Directory.EnumerateFiles(fileFolder))
+            await Task.Run(() =>
             {
-                fileArray.Add(Path.GetFileName(SInvoice));
-                /*
-                string fileName = Path.GetFileName(SInvoice);
-                string filePath = Path.GetFullPath(SInvoice);
-
-                var parts = ReadPdfController.SliceFilename(fileName);
-
-                string shortName = null;
-                string reserveType = null;
-
-                foreach (var part in parts)
+                foreach (var SInvoice in Directory.EnumerateFiles(fileFolder))
                 {
-                    // 🔹 ShortName: letters + numbers, no dash
-                    if (shortName == null &&
-                        Regex.IsMatch(part, @"^[A-Z0-9]{3,}$"))
+                    fileArray.Add(Path.GetFileName(SInvoice));
+                    /*
+                    string fileName = Path.GetFileName(SInvoice);
+                    string filePath = Path.GetFullPath(SInvoice);
+
+                    var parts = ReadPdfController.SliceFilename(fileName);
+
+                    string shortName = null;
+                    string reserveType = null;
+
+                    foreach (var part in parts)
                     {
-                        shortName = part;
-                    }
+                        // 🔹 ShortName: letters + numbers, no dash
+                        if (shortName == null &&
+                            Regex.IsMatch(part, @"^[A-Z0-9]{3,}$"))
+                        {
+                            shortName = part;
+                        }
 
-                    // 🔹 Reserve / Energy type (TS-WF, TS-RF, etc.)
-                    if (reserveType == null &&
-                        Regex.IsMatch(part, @"^[A-Z]{2,3}-[A-Z]{2}$"))
-                    {
-                        reserveType = part;
-                    }
+                        // 🔹 Reserve / Energy type (TS-WF, TS-RF, etc.)
+                        if (reserveType == null &&
+                            Regex.IsMatch(part, @"^[A-Z]{2,3}-[A-Z]{2}$"))
+                        {
+                            reserveType = part;
+                        }
 
-                    Debug.WriteLine($"ShortName   : {shortName}");
-                    Debug.WriteLine($"ReserveType: {reserveType}");
-                    Debug.WriteLine("--------------------------------");
-                } */
-            }
-
-            string[] shortNames = fileArray
-                .Select(f => f.Split('_')[0])
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .ToArray();
-
-            foreach (var shortName in shortNames)
-            {
-                string[] matchedFiles = fileArray
-                    .Where(f => f.StartsWith(shortName + "_", StringComparison.OrdinalIgnoreCase))
-                    .ToArray();
-
-                if (matchedFiles.Length == 0)
-                    continue; // nothing to process
-
-                string tsType = GetTsType(Path.GetFileName(matchedFiles[0]));
-
-                var zipPath = zipPdfFilesService.ZipPdfFiles(matchedFiles, shortName);
-
-
-
-                var emailList = tsType == "TS-RF" ? reserveEmails : energyEmails;
-
-                var emailEntries = emailList
-                .Where(entry =>
-                    string.Equals(entry.ShortName, shortName, StringComparison.OrdinalIgnoreCase))
-                .ToList();
-
-                Debug.WriteLine("Processing ShortName: " + shortName + "        ReserveType: " + tsType);
-                Debug.WriteLine("   ZipFile Location: " + zipPath);
-
-                foreach (var emailEntry in emailEntries)
-                {
-                    Debug.WriteLine($"          Sending to: {emailEntry.Email}");
-                    SendEmailController sendEmailController = new SendEmailController();
-                    sendEmailController.SendEmail(zipPath);
+                        Debug.WriteLine($"ShortName   : {shortName}");
+                        Debug.WriteLine($"ReserveType: {reserveType}");
+                        Debug.WriteLine("--------------------------------");
+                    } */
                 }
 
-            }
+                string[] shortNames = fileArray
+                    .Select(f => f.Split('_')[0])
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToArray();
+
+                foreach (var shortName in shortNames)
+                {
+                    string[] matchedFiles = fileArray
+                        .Where(f => f.StartsWith(shortName + "_", StringComparison.OrdinalIgnoreCase))
+                        .ToArray();
+
+                    if (matchedFiles.Length == 0)
+                        continue; // nothing to process
+
+                    string tsType = GetTsType(Path.GetFileName(matchedFiles[0]));
+
+                    var zipPath = zipPdfFilesService.ZipPdfFiles(matchedFiles, shortName);
+
+
+
+                    var emailList = tsType == "TS-RF" ? reserveEmails : energyEmails;
+
+                    var emailEntries = emailList
+                    .Where(entry =>
+                        string.Equals(entry.ShortName, shortName, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+
+                    Debug.WriteLine("Processing ShortName: " + shortName + "        ReserveType: " + tsType);
+                    Debug.WriteLine("   ZipFile Location: " + zipPath);
+
+                    foreach (var emailEntry in emailEntries)
+                    {
+                        Debug.WriteLine($"          Sending to: {emailEntry.Email}");
+                        
+                        sendEmailController.SendEmail(zipPath, emailEntry);
+                    }
+
+                }
+            });
+
+            loadingForm.Close();
+
+
         }
 
         public string GetTsType(string fileName)
