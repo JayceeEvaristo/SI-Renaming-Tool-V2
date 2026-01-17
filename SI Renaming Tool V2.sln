@@ -5,7 +5,7 @@ VisualStudioVersion = 17.14.36623.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SI Renaming Tool V2", "SI Renaming Tool V2\SI Renaming Tool V2.csproj", "{C82DF14E-84BD-414F-B660-C063FB81ACB4}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SI_Renaming_Tool_Setup", "SI_Renaming_Tool_Setup\SI_Renaming_Tool_Setup.vdproj", "{3222E481-E635-1E0E-1A95-5BC605249CD5}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SI_Setup", "SI_Setup\SI_Setup.vdproj", "{DED60F12-E6B4-9A49-8737-23966876378B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,8 +17,8 @@ Global
 		{C82DF14E-84BD-414F-B660-C063FB81ACB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C82DF14E-84BD-414F-B660-C063FB81ACB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C82DF14E-84BD-414F-B660-C063FB81ACB4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3222E481-E635-1E0E-1A95-5BC605249CD5}.Debug|Any CPU.ActiveCfg = Debug
-		{3222E481-E635-1E0E-1A95-5BC605249CD5}.Release|Any CPU.ActiveCfg = Release
+		{DED60F12-E6B4-9A49-8737-23966876378B}.Debug|Any CPU.ActiveCfg = Debug
+		{DED60F12-E6B4-9A49-8737-23966876378B}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

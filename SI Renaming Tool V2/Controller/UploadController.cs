@@ -1,4 +1,5 @@
 ﻿using SI_Renaming_Tool_V2.Model;
+using SI_Renaming_Tool_V2.Service;
 using SI_Renaming_Tool_V2_V2;
 using System;
 using System.Collections.Generic;
@@ -40,18 +41,29 @@ namespace SI_Renaming_Tool_V2.Controller
         public void UploadMasterFile()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
+            CheckIfExcelOpenService checkIfExcelOpenService = new CheckIfExcelOpenService();
             openFileDialog.Filter =  "Excel Files|*.xlsx;*.xls;*.xlsm";
             DialogResult result = openFileDialog.ShowDialog();
 
             if (result == DialogResult.OK)
             {
                 string filePath = openFileDialog.FileName;
-                Debug.WriteLine("Selected file path: " + filePath);
-                Model.UploadModel.MasterFileLocation = filePath;
-                masterFileLocation = filePath;
-                CanStartModel.hasMfile = true;
-                _form1.EnableButton();
-                _form1.SetLabelLocationText(filePath, true);
+
+                if (!checkIfExcelOpenService.CheckExcelAvailability(filePath))
+                {
+                    return;
+                }
+                else
+                {
+                    Debug.WriteLine("Selected file path: " + filePath);
+                    Model.UploadModel.MasterFileLocation = filePath;
+                    masterFileLocation = filePath;
+                    CanStartModel.hasMfile = true;
+                    _form1.EnableButton();
+                    _form1.SetLabelLocationText(filePath, true);
+                }
+
+               
             }
         }
 
@@ -95,18 +107,26 @@ namespace SI_Renaming_Tool_V2.Controller
         public void UploadEmailMasterFile()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
+            CheckIfExcelOpenService checkIfExcelOpenService = new CheckIfExcelOpenService();
             openFileDialog.Filter = "Excel Files|*.xlsx;*.xls;*.xlsm";
             DialogResult result = openFileDialog.ShowDialog();
 
             if (result == DialogResult.OK)
             {
                 string filePath = openFileDialog.FileName;
-                Debug.WriteLine("Selected file path: " + filePath);
-                Model.EmailingFileNameModel.EmailMasterFileNameLocation = filePath;
-                emailMasterFileLocation = filePath;
-                CanStartModel.hasEmailMfile = true;
-                _form1.EmailEnableButton();
-                _form1.EmailingSetLabelLocationText(filePath, true);
+                if(!checkIfExcelOpenService.CheckExcelAvailability(filePath))
+                {
+                    return;
+                }
+                else
+                {
+                    Debug.WriteLine("Selected file path: " + filePath);
+                    Model.EmailingFileNameModel.EmailMasterFileNameLocation = filePath;
+                    emailMasterFileLocation = filePath;
+                    CanStartModel.hasEmailMfile = true;
+                    _form1.EmailEnableButton();
+                    _form1.EmailingSetLabelLocationText(filePath, true);
+                }
             }
         }
 

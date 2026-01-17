@@ -1,9 +1,11 @@
 ﻿using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Spreadsheet;
 using SI_Renaming_Tool_V2.Model;
+using SI_Renaming_Tool_V2.Service;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -22,17 +24,21 @@ namespace SI_Renaming_Tool_V2.Controller
         //    _excelModel = excelModel;
         //}
 
-        public void OpenExcel() 
-        { 
+        public void OpenExcel()
+        {
+            
+            var originalFile = Model.UploadModel.MasterFileLocation;
+            
+            
             //Model.ExcelModel excelModel = new Model.ExcelModel();
-            _excelModel.Workbook = new XLWorkbook(Model.UploadModel.MasterFileLocation);
-        }     
+            _excelModel.Workbook = new XLWorkbook(originalFile);            
+        }
 
         public string Search(string SINumber)
         {
             string MFNumber = "";
-            //Model.ExcelModel excelModel = new Model.ExcelModel();
-            var workSheet = _excelModel.Workbook.Worksheet(worksheet);
+            ExcelModel excelModel = new Model.ExcelModel();
+            var workSheet = excelModel.Workbook.Worksheet(worksheet);
 
             int column = GetColumnNumber(workSheet);
 
@@ -60,7 +66,7 @@ namespace SI_Renaming_Tool_V2.Controller
 
                     int lastRow = workSheet.LastRowUsed().RowNumber();
 
-                    
+
                     //from below the row labels to the bottom
                     int totalCountCellColumn = workSheet
                         .Range(row + 1, col, lastRow, col)
@@ -91,34 +97,26 @@ namespace SI_Renaming_Tool_V2.Controller
 
                     //AMSDATA from oracle
                     AmsDataController amsDataController = new AmsDataController();
-                    List <AmsDataModel> amsData = amsDataController.GetData(minFS, maxFS);
+                    List<AmsDataModel> amsData = amsDataController.GetData(minFS, maxFS);
 
                     ReadPdfController readPdfController = new ReadPdfController();
-                    readPdfController.ReadPdf(amsData); 
+                    readPdfController.ReadPdf(amsData);
 
 
 
-                    
 
 
-                    //Debug.WriteLine("Start: " + col + ", " + row);
 
-                    //Debug.WriteLine("First Value: " + firstVal);
-
-                    //Debug.WriteLine("Last Value: " + lastVal);
-
-                    //Debug.WriteLine("Last Row: " + lastRow);
-
-                    //Debug.WriteLine("Total Count: " + totalCountCellColumn);
+                  
                 }
-                
+
             }
 
         }
 
-        public void Dispose() 
-        { 
-            _excelModel.Workbook.Dispose(); 
+        public void Dispose()
+        {
+            _excelModel.Workbook.Dispose();
         }
 
         public string GetBillingPeriod(string remark)
@@ -161,7 +159,7 @@ namespace SI_Renaming_Tool_V2.Controller
             }
             return column;
         }
-    
+
         //public Array GetWorkSheets()
         //{
         //    var worksheets = _excelModel.Workbook.Worksheets;

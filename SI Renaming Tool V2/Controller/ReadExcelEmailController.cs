@@ -1,5 +1,6 @@
 ﻿using ClosedXML.Excel;
 using SI_Renaming_Tool_V2.Model;
+using SI_Renaming_Tool_V2.Service;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -15,7 +16,16 @@ namespace SI_Renaming_Tool_V2.Controller
 
         public void OpenExcel()
         {
-            _excelModel.Workbook = new XLWorkbook(Model.EmailingFileNameModel.EmailMasterFileNameLocation);
+            try
+            {
+                _excelModel.Workbook = new XLWorkbook(Model.EmailingFileNameModel.EmailMasterFileNameLocation);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error opening Excel file: " + ex.Message);
+                throw;
+            }
+            
         }
 
         public Dictionary<string, List<EmailListModel>> GetEmailList()

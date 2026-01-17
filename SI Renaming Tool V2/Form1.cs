@@ -31,25 +31,41 @@ namespace SI_Renaming_Tool_V2_V2
 
         private async void btn_start_Click(object sender, EventArgs e)
         {
-            var loadingForm = new frm_loading();
-            loadingForm.Show();
-            loadingForm.Refresh();
-            //ReadPdfController readPdfController = new ReadPdfController();
-
-
-
-            //readExcelController.OpenExcel();
-            //readPdfController.ReadPdf();
-            await Task.Run(() =>
+            CheckIfExcelOpenService checkIfExcelOpenService 
+                = new CheckIfExcelOpenService();
+            if (!checkIfExcelOpenService.CheckExcelAvailability(UploadModel.MasterFileLocation))
             {
-                ReadExcelController readExcelController = new ReadExcelController();
-                readExcelController.OpenExcel();
-                readExcelController.GetRange();
-            });
+                return;
+            }
+            else
+            {
+                var loadingForm = new frm_loading();
+                loadingForm.Show();
+                loadingForm.Refresh();
+                //ReadPdfController readPdfController = new ReadPdfController();
 
-            loadingForm.Close();
 
-            MessageBox.Show("Process Completed!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                //readExcelController.OpenExcel();
+                //readPdfController.ReadPdf();
+                await Task.Run(() =>
+                {
+                    ReadExcelController readExcelController = new ReadExcelController();
+
+
+
+                    readExcelController.OpenExcel();
+                    readExcelController.GetRange();
+
+
+
+                });
+
+                loadingForm.Close();
+
+                MessageBox.Show("Process Completed!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            
 
 
 
@@ -186,30 +202,47 @@ namespace SI_Renaming_Tool_V2_V2
             uploadController.EmailUploadLocate(false);
         }
 
-        private async void btn_start_emailing_Click(object sender, EventArgs e)
+        private void btn_start_emailing_Click(object sender, EventArgs e)
         {
-            if (!GlobalVarModel.isTesting)
+            CheckIfExcelOpenService checkIfExcelOpenService = new CheckIfExcelOpenService();
+            if(!checkIfExcelOpenService.CheckExcelAvailability(EmailingFileNameModel.EmailMasterFileNameLocation))
             {
-                DialogResult result = MessageBox.Show("" +
-                    "By selecting OK, you certify that all participant email addresses have been thoroughly reviewed, validated, and are correct.", "Confirmation", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
-
-                if (result == DialogResult.Cancel)
-                {
-                    return;
-                }
-                else
-                {   
-                    Confirmed();
-                }
-
+                return;
             }
             else
             {
-                Confirmed();
+                frm_loading frm_loading = new frm_loading();
+                
+                if (!GlobalVarModel.isTesting)
+                {
+                    DialogResult result = MessageBox.Show("" +
+                        "By selecting OK, you certify that all participant email addresses have been thoroughly reviewed, validated, and are correct.", "Confirmation", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+
+                    if (result == DialogResult.Cancel)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        frm_loading.Show();
+                        frm_loading.Refresh();
+
+                        Confirmed(frm_loading);
+                    }
+
+                }
+                else
+                {
+                    frm_loading.Show();
+                    frm_loading.Refresh();
+
+                    Confirmed(frm_loading);
+                }
+
+
+
+                
             }
-            
-
-
         }
 
         public string GetTsType(string fileName)
@@ -228,11 +261,8 @@ namespace SI_Renaming_Tool_V2_V2
             Debug.WriteLine("isTesting: " + GlobalVarModel.isTesting);
         }
 
-        public async void Confirmed()
+        public async void Confirmed(frm_loading frm_loading)
         {
-            var loadingForm = new frm_loading();
-            loadingForm.Show();
-
             ZipPdfFilesService zipPdfFilesService = new ZipPdfFilesService();
             SendEmailController sendEmailController = new SendEmailController();
             TestToExcelController TesToExcelController = new TestToExcelController();
@@ -248,6 +278,7 @@ namespace SI_Renaming_Tool_V2_V2
             List<string> fileArray = new List<string>();
 
             List<LogEmailModel> logEmailTestList = new List<LogEmailModel>();
+            List<string> zipPaths = new List<string>();
 
             string fileFolder = EmailingFileNameModel.EmailRenamedServiceInvoiceLocation;
 
@@ -256,35 +287,6 @@ namespace SI_Renaming_Tool_V2_V2
                 foreach (var SInvoice in Directory.EnumerateFiles(fileFolder))
                 {
                     fileArray.Add(Path.GetFileName(SInvoice));
-                    /*
-                    string fileName = Path.GetFileName(SInvoice);
-                    string filePath = Path.GetFullPath(SInvoice);
-
-                    var parts = ReadPdfController.SliceFilename(fileName);
-
-                    string shortName = null;
-                    string reserveType = null;
-
-                    foreach (var part in parts)
-                    {
-                        // 🔹 ShortName: letters + numbers, no dash
-                        if (shortName == null &&
-                            Regex.IsMatch(part, @"^[A-Z0-9]{3,}$"))
-                        {
-                            shortName = part;
-                        }
-
-                        // 🔹 Reserve / Energy type (TS-WF, TS-RF, etc.)
-                        if (reserveType == null &&
-                            Regex.IsMatch(part, @"^[A-Z]{2,3}-[A-Z]{2}$"))
-                        {
-                            reserveType = part;
-                        }
-
-                        Debug.WriteLine($"ShortName   : {shortName}");
-                        Debug.WriteLine($"ReserveType: {reserveType}");
-                        Debug.WriteLine("--------------------------------");
-                    } */
                 }
 
                 string[] shortNames = fileArray
@@ -315,6 +317,8 @@ namespace SI_Renaming_Tool_V2_V2
                     Debug.WriteLine("Processing ShortName: " + shortName + "        ReserveType: " + tsType);
                     Debug.WriteLine("   ZipFile Location: " + zipPath);
 
+                    zipPaths.Add(zipPath);
+
                     foreach (var emailEntry in emailEntries)
                     {
                         Debug.WriteLine($"          Sending to: {emailEntry.Email}");
@@ -330,14 +334,13 @@ namespace SI_Renaming_Tool_V2_V2
                         }
                         else
                         {
-                            sendEmailController.SendEmail(zipPath, emailEntry.Email);
-                            Task.Delay(1000).Wait();
+                            sendEmailController.SendEmail(zipPath, emailEntry.Email, shortName);
+                            Task.Delay(2000).Wait();
                         }
                     }
 
-                    File.Delete(zipPath);
 
-                    Task.Delay(2500).Wait();
+                    //Task.Delay(2500).Wait();
                 }
                 if (GlobalVarModel.isTesting)
                 {
@@ -345,8 +348,18 @@ namespace SI_Renaming_Tool_V2_V2
                 }
             });
 
-            loadingForm.Close();
+            foreach (var zipPath in zipPaths)
+            {
+                File.Delete(zipPath);
+            }
+
+            frm_loading.Close();
+
+            MessageBox.Show("Process Completed!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
         }
+
+        
+
     }
 }
