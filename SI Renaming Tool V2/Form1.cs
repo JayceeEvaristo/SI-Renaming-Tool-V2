@@ -31,7 +31,7 @@ namespace SI_Renaming_Tool_V2_V2
 
         private async void btn_start_Click(object sender, EventArgs e)
         {
-            CheckIfExcelOpenService checkIfExcelOpenService 
+            CheckIfExcelOpenService checkIfExcelOpenService
                 = new CheckIfExcelOpenService();
             if (!checkIfExcelOpenService.CheckExcelAvailability(UploadModel.MasterFileLocation))
             {
@@ -65,7 +65,7 @@ namespace SI_Renaming_Tool_V2_V2
 
                 MessageBox.Show("Process Completed!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            
+
 
 
 
@@ -205,14 +205,14 @@ namespace SI_Renaming_Tool_V2_V2
         private void btn_start_emailing_Click(object sender, EventArgs e)
         {
             CheckIfExcelOpenService checkIfExcelOpenService = new CheckIfExcelOpenService();
-            if(!checkIfExcelOpenService.CheckExcelAvailability(EmailingFileNameModel.EmailMasterFileNameLocation))
+            if (!checkIfExcelOpenService.CheckExcelAvailability(EmailingFileNameModel.EmailMasterFileNameLocation))
             {
                 return;
             }
             else
             {
                 frm_loading frm_loading = new frm_loading();
-                
+
                 if (!GlobalVarModel.isTesting)
                 {
                     DialogResult result = MessageBox.Show("" +
@@ -241,7 +241,7 @@ namespace SI_Renaming_Tool_V2_V2
 
 
 
-                
+
             }
         }
 
@@ -348,18 +348,17 @@ namespace SI_Renaming_Tool_V2_V2
                 }
             });
 
-            foreach (var zipPath in zipPaths)
-            {
-                File.Delete(zipPath);
-            }
+            //foreach (var zipPath in zipPaths)
+            //{
+            //    File.Delete(zipPath);
+            //}
 
             frm_loading.Close();
 
             MessageBox.Show("Process Completed!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
         }
 
-        
+
 
     }
 }

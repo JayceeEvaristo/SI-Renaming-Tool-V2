@@ -51,6 +51,8 @@ namespace SI_Renaming_Tool_V2.Service
                         CompressionLevel.Optimal
                     );
                 }
+
+                zip.Dispose();
             }
             return zipFilePath;
         }
